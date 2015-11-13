@@ -128,6 +128,7 @@ let rec eval (evn,e) = match e with
               | Ne     -> Bool(e3 != e4)
               | Lt     -> Bool(e3 <  e4)
               | Le     -> Bool(e3 <= e4)
+              | Cons   -> Pair(Int e3, Int e4)
             )
         | (Bool e5, Bool e6) ->
             (match op with 
@@ -136,6 +137,11 @@ let rec eval (evn,e) = match e with
               | And    -> Bool(e5 && e6)
               | Or     -> Bool(e5 || e6)
             )
+        | (Int e7, Nil) -> match op with
+            | Cons -> Pair(Int e7, Nil)
+        | (Int e8, Pair(e9,e10)) -> match op with
+          | Cons -> Pair(Int e8, Pair(e9,e10))
+
       )
   | Var x       -> (match lookup (x, evn) with
                      | None -> raise(MLFailure "Not Found!")
